@@ -18,7 +18,7 @@ public class AccelerometerActivity extends Activity implements SensorEventListen
     private SensorManager sensorManager;
     private double ax, ay, az;
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_main);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -35,14 +35,16 @@ public class AccelerometerActivity extends Activity implements SensorEventListen
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             ax = event.values[0];
             TextView xaxis = (TextView)this.findViewById(R.id.xaxis);
-            xaxis.setText(ax + "");
+            xaxis.setText(Math.round(ax * 100.0) / 100.0 + "");
             ay = event.values[1];
             TextView yaxis = (TextView)this.findViewById(R.id.yaxis);
-            yaxis.setText(ay + "");
+            yaxis.setText(Math.round(ay * 100.0) / 100.0 + "");
             az = event.values[2];
             TextView zaxis = (TextView)this.findViewById(R.id.zaxis);
-            zaxis.setText(az + "");
+            zaxis.setText(Math.round(ax * 100.0) / 100.0 + "");
         }
     }
+
+
 
 }
