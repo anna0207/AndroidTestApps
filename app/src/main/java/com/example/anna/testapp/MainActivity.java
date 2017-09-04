@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         image = (ImageView)findViewById(R.id.imageViewCompass);
         compassAngle = (TextView)findViewById(R.id.angle);
-        compass = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        compass = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         if(compass != null){
             sensorManager.registerListener(this, compass, SensorManager.SENSOR_DELAY_NORMAL);
         }
@@ -73,18 +73,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             TextView zaxis = (TextView)this.findViewById(R.id.zaxis);
             zaxis.setText(Math.round(az * 1000.0) / 1000.0 + "");
         }
-        if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
+        if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
             float degree = Math.round(event.values[0]);
             compassAngle.setText("Heading: " + Float.toString(degree) + " degrees");
             // create a rotation animation (reverse turn degree degrees)
-            RotateAnimation ra = new RotateAnimation(currentDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            RotateAnimation ra = new RotateAnimation(currentDegree, degree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             // how long the animation will take place
             ra.setDuration(210);
             // set the animation after the end of the reservation status
             ra.setFillAfter(true);
             // Start the animation
             image.startAnimation(ra);
-            currentDegree = -degree;
+            currentDegree = degree;
         }
     }
 
