@@ -27,7 +27,7 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Accelerometer"
+                android:text="Sensors"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
             <TextView
@@ -36,40 +36,40 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/xaxis"
+                android:id="@+id/xtext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="X-axis"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/xaxis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="No Data" />
 
             <TextView
-                android:id="@+id/yaxis"
+                android:id="@+id/ytext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Y-axis"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/yaxis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="No Data" />
 
             <TextView
-                android:id="@+id/zaxis"
+                android:id="@+id/ztext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Z-axis"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/zaxis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="No Data" />
@@ -90,6 +90,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:srcCompat="@android:drawable/title_bar_tall" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Latitude" />
+
+            <TextView
+                android:id="@+id/latitude"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No Data" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Longitude" />
+
+            <TextView
+                android:id="@+id/longitude"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Time" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
         </LinearLayout>
     </ScrollView>
 
