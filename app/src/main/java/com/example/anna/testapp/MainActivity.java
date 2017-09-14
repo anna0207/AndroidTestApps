@@ -7,7 +7,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.Address;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,7 +36,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.text.Text;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private SensorManager sensorManager;
@@ -45,15 +49,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float currentDegree = 0f;
     private FusedLocationProviderClient fusedLocationClient;
     private String _tag = "DebugLog";
+    private Geocoder geocoder;
 
     public final int COARSE_LOCATION_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        geocoder = new Geocoder(this, Locale.getDefault());
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkPermission();
@@ -69,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (compass != null) {
             sensorManager.registerListener(this, compass, SensorManager.SENSOR_DELAY_NORMAL);
         }
+
     }
 
     public void checkPermission(){
@@ -102,29 +111,30 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private void updateLocationData() {
         try {
-            Log.i(_tag, "1");
             Task<Location> task = fusedLocationClient.getLastLocation();
-            Log.i(_tag, "1,5");
             OnSuccessListener<Location> listener = new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    Log.i(_tag, "2");
                     if (location != null) {
-                        Log.i(_tag, "3");
                         TextView lat = (TextView)findViewById(R.id.latitude);
                         TextView lon = (TextView)findViewById(R.id.longitude);
                         TextView time = (TextView)findViewById(R.id.time);
+                        TextView address = (TextView)findViewById(R.id.address);
                         lat.setText(String.valueOf(location.getLatitude()));
                         lon.setText(String.valueOf(location.getLongitude()));
                         Date last = new Date(location.getTime());
                         time.setText(last.toString());
+                        try {
+                            String addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1).get(0).getAddressLine(0);
+                            addresses = addresses.replace(',', '\n');
+                            address.setText(addresses);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    Log.i(_tag, "4");
                 }
             };
-            Log.i(_tag, "4,5");
             task.addOnSuccessListener(this, listener);
-            Log.i(_tag, "5");
         } catch (SecurityException ex) {
             Log.i(_tag, ex.getMessage());
         }
@@ -137,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
+
+
     @Override
     public void onAccuracyChanged(Sensor arg0, int arg1) {
 
@@ -147,26 +159,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             ax = event.values[0];
             TextView xaxis = (TextView) this.findViewById(R.id.xaxis);
-            xaxis.setText(Math.round(ax * 1000.0) / 1000.0 + "");
+            xaxis.setText(String.valueOf(Math.round(ax * 1000.0) / 1000.0));
             ay = event.values[1];
             TextView yaxis = (TextView) this.findViewById(R.id.yaxis);
-            yaxis.setText(Math.round(ay * 1000.0) / 1000.0 + "");
+            yaxis.setText(String.valueOf(Math.round(ay * 1000.0) / 1000.0));
             az = event.values[2];
             TextView zaxis = (TextView) this.findViewById(R.id.zaxis);
-            zaxis.setText(Math.round(az * 1000.0) / 1000.0 + "");
+            zaxis.setText(String.valueOf(Math.round(az * 1000.0) / 1000.0));
         }
         if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
             float degree = Math.round(event.values[0]);
             compassAngle.setText("Heading: " + Float.toString(degree) + " degrees");
             // create a rotation animation (reverse turn degree degrees)
-            RotateAnimation ra = new RotateAnimation(currentDegree, degree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            RotateAnimation ra = new RotateAnimation(currentDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             // how long the animation will take place
             ra.setDuration(210);
             // set the animation after the end of the reservation status
             ra.setFillAfter(true);
             // Start the animation
             image.startAnimation(ra);
-            currentDegree = degree;
+            currentDegree = -degree;
         }
     }
 
